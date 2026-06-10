@@ -1,0 +1,67 @@
+{% load i18n %}
+<div id="company-overview" class="mb-3">
+  <h5 class="mb-2">{% translate "Company Overview" %}</h5>
+  <div class="table-responsive">
+    <table class="table table-sm table-hover table-striped align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>{% translate "Company" %}</th>
+          <th>{% translate "Role" %}</th>
+          {% for year in fiscal_years %}
+            <th class="text-center">{% translate "GuV" %} {{ year }}</th>
+          {% endfor %}
+          <th class="text-center">{% translate "Docs" %}</th>
+          <th class="text-center">{% translate "Info-Memo" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in company_overview %}
+        <tr>
+          <td>
+            <strong>{{ entry.client.company }}</strong>
+            {% if entry.client.legal_form %}<small class="text-muted">({{ entry.client.legal_form }})</small>{% endif %}
+          </td>
+          <td>
+            {% if entry.role == "Leasingnehmer" %}
+              <span class="btn btn-sm btn-outline-primary">{{ entry.role }}</span>
+            {% elif entry.role == "Holding" %}
+              <span class="btn btn-sm btn-outline-brand">{{ entry.role }}</span>
+            {% elif entry.role == "Tochter" %}
+              <span class="btn btn-sm btn-outline-secondary">{{ entry.role }}</span>
+            {% elif entry.role == "Schwester" %}
+              <span class="btn btn-sm btn-outline-secondary">{{ entry.role }}</span>
+            {% else %}
+              <span class="btn btn-sm btn-outline-light text-dark">{{ entry.role }}</span>
+            {% endif %}
+          </td>
+          {% for count in entry.guv_by_year %}
+            <td class="text-center">
+              {% if count %}
+                <span class="btn btn-sm btn-outline-success">{{ count }}</span>
+              {% else %}
+                <span class="text-muted">-</span>
+              {% endif %}
+            </td>
+          {% endfor %}
+          <td class="text-center">
+            {% if entry.doc_count %}
+              <span class="btn btn-sm btn-outline-secondary">{{ entry.doc_count }}</span>
+            {% else %}
+              <span class="text-muted">-</span>
+            {% endif %}
+          </td>
+          <td class="text-center">
+            <button class="btn btn-sm {% if entry.is_active %}btn-success{% else %}btn-outline-secondary{% endif %}"
+                    hx-post="{% url 'data_room:hx-toggle-company-link' project.pk entry.client.pk %}"
+                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                    hx-target="#company-overview"
+                    hx-swap="outerHTML">
+              {% if entry.is_active %}{% translate "Active" %}{% else %}{% translate "Inactive" %}{% endif %}
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

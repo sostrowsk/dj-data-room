@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "dj-data-room"
+version = "0.1.0"
+description = "Protected document data room for Django: project/client document management with pluggable permission policies, OTP-gated views, watermarked PDF previews, ZIP export, indexing pipeline orchestration and host hooks for LLM extraction (app package `data_room`)."
+authors = ["Stefan Ostrowski <ostrowski@addvendo.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "data_room" }]
+include = [
+    { path = "data_room/templates/**/*", format = ["sdist", "wheel"] },
+    { path = "data_room/locale/**/*", format = ["sdist", "wheel"] },
+    { path = "data_room/**/*.md", format = ["sdist", "wheel"] },
+]
+
+[tool.poetry.dependencies]
+python = ">=3.13,<3.14"
+django = "^5"
+celery = "^5"
+pillow = "^12"
+pymupdf = "^1.26"
+pdf2image = "^1"
+easy-thumbnails = "^2"
+django-otp = "^1"
+pydantic = "^2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

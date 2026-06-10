@@ -1,0 +1,9 @@
+{% load i18n %}
+{% load lucide_tags %}
+{# Success message #}
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+  {% icon "spinner" class="me-2" %}
+  {% translate "Client extraction started for" %} {{ documents.count }} {% translate "documents" %}.
+  {% translate "Please wait for processing to complete." %}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>

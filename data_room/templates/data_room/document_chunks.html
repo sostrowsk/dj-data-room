@@ -1,0 +1,29 @@
+{% extends "base_container.html" %}
+{% load static i18n %}
+
+{% block title %}{% translate "Document Chunks" %} - {{ document.name }}{% endblock %}
+
+{% block content %}
+<div class="card border-brand-green border-2 shadow">
+    <div class="card-header bg-white">
+        <h2 class="mb-0">{{ document.name }}</h2>
+        <small class="text-muted">{% translate "Document Chunks" %}</small>
+    </div>
+    <div class="card-body">
+        {% for chunk in chunks %}
+        <div class="card mb-3">
+            <div class="card-header bg-light">
+                <strong>{% translate "Chunk" %} #{{ forloop.counter }}</strong>
+            </div>
+            <div class="card-body">
+                {{ chunk.page_content|safe }}
+            </div>
+        </div>
+        {% empty %}
+        <div class="alert alert-info">
+            {% translate "No chunks found for this document." %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

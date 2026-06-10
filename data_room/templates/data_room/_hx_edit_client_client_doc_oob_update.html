@@ -1,0 +1,9 @@
+{% load i18n %}
+{# Close modal #}
+<div id="DocumentModal"></div>
+
+{# OOB update for card view #}
+{% include "data_room/_show_company_document_card.html" with protected_document=document hx_swap_oob=True %}
+
+{# OOB update for table row view #}
+{% include "data_room/_show_company_document_table_row.html" with protected_document=document hx_swap_oob=True %}

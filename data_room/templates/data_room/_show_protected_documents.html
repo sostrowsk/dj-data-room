@@ -1,0 +1,168 @@
+{% load i18n %}
+{% load lucide_tags %}
+<div id="show-documents" class="mb-3">
+  <div id="upload-documents"></div>
+
+  {# View Toggle Button #}
+  {% if company_documents or client_documents or broker_documents or partner_documents %}
+  <div class="d-flex justify-content-end mb-2">
+    <div class="btn-group btn-group-sm" role="group" aria-label="{% translate 'View toggle' %}">
+      <button type="button" class="btn btn-outline-secondary view-toggle active" data-view="card" title="{% translate 'Card view' %}">
+        {% icon "th-large" %}
+      </button>
+      <button type="button" class="btn btn-outline-secondary view-toggle" data-view="table" title="{% translate 'Table view' %}">
+        {% icon "list" %}
+      </button>
+    </div>
+  </div>
+  {% endif %}
+
+  {# Company documents (ProtectedClientDocument) grouped by linked client #}
+  {% if not_partner and company_overview %}
+    <h3>{% translate "Corporate Structure" %}</h3>
+    {% include "data_room/_orgchart.html" %}
+    {% include "data_room/_company_overview.html" %}
+  {% endif %}
+  {% if not_partner %}
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <h3 class="mb-0">{% translate "Company Documents" %}</h3>
+    <a class="btn btn-outline-success btn-sm" href=""
+       hx-get="{% url 'data_room:hx-upload-client' project.pk %}"
+       hx-target="#upload-documents" hx-swap="outerHTML">
+      {% icon "circle-plus" %} {% translate "New company document" %}
+    </a>
+  </div>
+  {% endif %}
+  {% for client, documents in company_documents %}
+    <p class="mt-3"><b>{% if client %}{{ client.company }}{% else %}{% translate "Company Documents" %}{% endif %}</b></p>
+
+    {# Card View #}
+    <div class="document-view card-view d-flex flex-wrap">
+      {% for protected_document in documents %}
+        {% include "data_room/_show_company_document_card.html" %}
+      {% endfor %}
+    </div>
+
+    {# Table View #}
+    <div class="document-view table-view d-none">
+      <div class="table-responsive">
+        <table class="table table-hover table-striped">
+          <thead>
+            <tr>
+              <th>{% translate "Name" %}</th>
+              <th>{% translate "Type" %}</th>
+              <th>{% translate "Document Type" %}</th>
+              <th>{% translate "Statement Type" %}</th>
+              <th>{% translate "Date" %}</th>
+              <th>{% translate "Review" %}</th>
+              <th>{% translate "Index" %}</th>
+              <th>{% translate "Linked" %}</th>
+              <th class="text-end">{% translate "Actions" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for protected_document in documents %}
+              {% include "data_room/_show_company_document_table_row.html" %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endfor %}
+
+  {# Project documents (ProtectedProjectDocument) #}
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <h3 class="mb-0">{% translate "Project documents" %}</h3>
+    <a class="btn btn-outline-success btn-sm" href=""
+       hx-get="{% url 'data_room:hx-upload-project' project.pk %}"
+       hx-target="#upload-documents" hx-swap="outerHTML">
+      {% icon "circle-plus" %} {% translate "New project document" %}
+    </a>
+  </div>
+  {% if client_documents or broker_documents or partner_documents %}
+
+    {# Card View #}
+    <div class="document-view card-view d-flex flex-wrap">
+      {% for protected_document in client_documents %}
+        {% include "data_room/_show_protected_document.html" %}
+      {% endfor %}
+      {% for protected_document in broker_documents %}
+        {% include "data_room/_show_protected_document.html" %}
+      {% endfor %}
+      {% for protected_document in partner_documents %}
+        {% include "data_room/_show_protected_document.html" %}
+      {% endfor %}
+    </div>
+
+    {# Table View #}
+    <div class="document-view table-view d-none">
+      <div class="table-responsive">
+        <table class="table table-hover table-striped">
+          <thead>
+            <tr>
+              <th>{% translate "Type" %}</th>
+              <th>{% translate "Name" %}</th>
+              <th>{% translate "Document Type" %}</th>
+              <th>{% translate "Uploaded by" %}</th>
+              <th>{% translate "Date" %}</th>
+              <th>{% translate "Review" %}</th>
+              <th>{% translate "Index" %}</th>
+              <th class="text-end">{% translate "Actions" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for protected_document in client_documents %}
+              {% include "data_room/_show_project_document_table_row.html" %}
+            {% endfor %}
+            {% for protected_document in broker_documents %}
+              {% include "data_room/_show_project_document_table_row.html" %}
+            {% endfor %}
+            {% for protected_document in partner_documents %}
+              {% include "data_room/_show_project_document_table_row.html" %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endif %}
+
+
+</div>
+<div id="DocumentModal"></div>
+
+<script nonce="{{ csp_nonce }}">
+(function() {
+  const STORAGE_KEY = 'dataroom_view_preference';
+
+  function setView(view) {
+    const cardViews = document.querySelectorAll('.card-view');
+    const tableViews = document.querySelectorAll('.table-view');
+    const buttons = document.querySelectorAll('.view-toggle');
+
+    if (view === 'table') {
+      cardViews.forEach(el => el.classList.add('d-none'));
+      tableViews.forEach(el => el.classList.remove('d-none'));
+    } else {
+      cardViews.forEach(el => el.classList.remove('d-none'));
+      tableViews.forEach(el => el.classList.add('d-none'));
+    }
+
+    buttons.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.view === view);
+    });
+
+    localStorage.setItem(STORAGE_KEY, view);
+  }
+
+  // Initialize from stored preference
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (stored) {
+    setView(stored);
+  }
+
+  // Attach click handlers
+  document.querySelectorAll('.view-toggle').forEach(btn => {
+    btn.addEventListener('click', () => setView(btn.dataset.view));
+  });
+})();
+</script>

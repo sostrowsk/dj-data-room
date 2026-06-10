@@ -1,0 +1,61 @@
+{% load i18n protected_document_tags %}
+{% load lucide_tags %}
+{% check_permissions protected_document as permission %}
+{% if permission %}
+<tr id="project-document-row-{{ protected_document.pk|stringformat:"s" }}"{% if hx_swap_oob %} hx-swap-oob="true"{% endif %}>
+  <td><span class="btn btn-sm btn-outline-secondary">{{ protected_document.type|upper }}</span></td>
+  <td>
+    <a href="#" hx-get="{% url 'data_room:api-page' protected_document.pk %}" hx-target="#DocumentModal">
+      {{ protected_document.name }}
+    </a>
+  </td>
+  <td>
+    {% if protected_document.document_type %}
+      <span class="btn btn-sm btn-outline-brand">{{ protected_document.get_document_type_display }}</span>
+    {% else %}
+      -
+    {% endif %}
+  </td>
+  <td>
+    {% if protected_document.user_type == "partner" %}
+      {{ protected_document.user_company }}
+    {% else %}
+      {{ protected_document.get_user_type_display }}
+    {% endif %}
+  </td>
+  <td>{{ protected_document.date_created|date:"d.m.Y" }}</td>
+  <td>
+    {% include "data_room/includes/_status_badges.html" with doc=protected_document show_pending=True %}
+  </td>
+  <td>
+    {% include "data_room/includes/_indexing_badge.html" with doc=protected_document %}
+  </td>
+  <td class="text-end text-nowrap">
+    <a href="{% url 'data_room:api-pdf' protected_document.pk %}" class="btn btn-sm btn-outline-primary" title="{% translate 'Download' %}">
+      {% icon "download" %}
+    </a>
+    {% if user.type in "broker,admin" %}
+      <a href="{% url 'data_room:api-original' protected_document.pk %}" class="btn btn-sm btn-outline-secondary" title="{% translate 'Original' %}">
+        {% icon "file" %}
+      </a>
+      {% with pk_str=protected_document.pk|stringformat:"s" %}{% with target_id="project-document-row-"|add:pk_str %}
+        {% url 'data_room:reviewed' protected_document.pk as url_reviewed %}
+        {% url 'data_room:disabled' protected_document.pk as url_disabled %}
+        {% url 'data_room:enable' protected_document.pk as url_enable %}
+        {% include "data_room/includes/_action_buttons.html" with doc=protected_document target_id=target_id url_reviewed=url_reviewed url_disabled=url_disabled url_enable=url_enable view_type="table" %}
+        {% url 'data_room:delete' protected_document.pk as url_delete %}
+        <a class="btn btn-sm btn-outline-danger"
+           hx-post="{{ url_delete }}?view=table"
+           hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+           hx-target="#{{ target_id }}"
+           hx-swap="outerHTML"
+           hx-confirm="{% translate 'Are you sure you want to delete this document?' %}"
+           title="{% translate 'Delete' %}">
+          {% icon "trash" %}
+        </a>
+      {% endwith %}{% endwith %}
+
+    {% endif %}
+  </td>
+</tr>
+{% endif %}

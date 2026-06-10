@@ -1,0 +1,9 @@
+{% load i18n %}
+{# Status badges - disabled/reviewed/pending #}
+{% if doc.disabled %}
+  <span class="btn btn-sm btn-outline-danger">{% translate "Disabled" %}</span>
+{% elif doc.reviewed %}
+  <span class="btn btn-sm btn-outline-success">{% translate "Reviewed" %}</span>
+{% elif show_pending %}
+  <span class="btn btn-sm btn-outline-warning">{% translate "Pending" %}</span>
+{% endif %}

@@ -1,0 +1,11 @@
+{% load i18n %}
+{# Indexing status badge #}
+{% if doc.indexing_status == "indexed" %}
+  <span class="btn btn-sm btn-outline-success">{% translate "Indexed" %}</span>
+{% elif doc.indexing_status == "pending" %}
+  <span class="btn btn-sm btn-outline-warning">{% translate "Pending" %}</span>
+{% elif doc.indexing_status == "failed" %}
+  <span class="btn btn-sm btn-outline-danger">{% translate "Failed" %}</span>
+{% else %}
+  <span class="btn btn-sm btn-outline-secondary">{{ doc.indexing_status }}</span>
+{% endif %}

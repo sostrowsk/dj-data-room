@@ -1,0 +1,208 @@
+{% load i18n %}
+{% load lucide_tags %}
+<div class="modal fade show d-block" tabindex="-1" id="confirmClientsModal">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content" id="confirm-clients-{{ document.pk }}">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {% icon "building" class="me-2" %}
+          {% translate "Confirm Clients" %}: {{ document.name|truncatechars:40 }}
+        </h5>
+        <button type="button" class="btn-close"
+                hx-get="{% url 'data_room:hx-close-modal' %}"
+                hx-target="#DocumentModal"
+                hx-swap="innerHTML"></button>
+      </div>
+      <div class="modal-body">
+        {% if not formset.forms %}
+          <p class="text-muted">{% translate "No companies were identified in this document." %}</p>
+        {% else %}
+          <form hx-post="{% if is_client_document %}{% url 'data_room:hx-confirm-clients-client-doc' document.pk %}{% else %}{% url 'data_room:hx-confirm-clients' project.pk document.pk %}{% endif %}"
+                hx-target="#DocumentModal"
+                hx-swap="innerHTML">
+            {% csrf_token %}
+
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>{% translate "Extracted Company" %}</th>
+                    <th>{% translate "HRB" %}</th>
+                    <th>{% translate "Legal Form" %}</th>
+                    <th>{% translate "Match" %}</th>
+                    <th>{% translate "Action" %}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for form in formset %}
+                  <tr>
+                    <td>
+                      {{ form.entity_index }}
+                      <strong>{{ form.entity_data.name }}</strong>
+                      {% if form.entity_data.role %}
+                        <br><small class="text-muted">{{ form.entity_data.role }}</small>
+                      {% endif %}
+                    </td>
+                    <td>{{ form.entity_data.registration_number|default:"-" }}</td>
+                    <td>{{ form.entity_data.legal_form|default:"-" }}</td>
+                    <td>
+                      {% if form.entity_data.match.existing_client_id %}
+                        {% if form.entity_data.match.match_type == "exact_hrb" %}
+                          <span class="btn btn-sm btn-outline-success">HRB Match</span>
+                        {% elif form.entity_data.match.match_type == "exact_name" %}
+                          <span class="btn btn-sm btn-outline-success">{% translate "Name Match" %}</span>
+                        {% else %}
+                          <span class="btn btn-sm btn-outline-brand">{{ form.entity_data.match.match_type }}</span>
+                        {% endif %}
+                        <br><small class="text-success fw-bold">{{ form.entity_data.match.existing_client_name }}</small>
+                        {% if form.entity_data.registration_number and form.entity_data.match.match_type in "exact_hrb,exact_name" %}
+                          <br><span class="btn btn-sm btn-outline-warning text-dark mt-1">{% icon "lightbulb" class="me-1" %}{% translate "Suggested" %}</span>
+                        {% endif %}
+                      {% elif form.entity_data.registration_number %}
+                        <span class="btn btn-sm btn-outline-primary">{% translate "HRB found" %}</span>
+                        <br><span class="btn btn-sm btn-outline-warning text-dark mt-1">{% icon "plus" class="me-1" %}{% translate "Create new" %}</span>
+                      {% else %}
+                        <span class="btn btn-sm btn-outline-secondary">{% translate "No match" %}</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <div class="btn-group-vertical btn-group-sm" role="group">
+                        {% for radio in form.action %}
+                        <div class="form-check">
+                          {{ radio.tag }}
+                          <label class="form-check-label" for="{{ radio.id_for_label }}">
+                            {{ radio.choice_label }}
+                          </label>
+                        </div>
+                        {% endfor %}
+                      </div>
+
+                      <div class="mt-3 p-2 border border-primary rounded entity-existing-client d-none">
+                        <label class="form-label fw-bold text-primary mb-2">
+                          {% icon "users" class="me-1" %}{% translate "Select existing client:" %}
+                        </label>
+                        {{ form.existing_client }}
+                        <small class="text-muted d-block mt-1">{{ form.existing_client.field.queryset.count }} clients available</small>
+                        {% if form.existing_client.errors %}
+                          <div class="text-danger small mt-1">{{ form.existing_client.errors }}</div>
+                        {% endif %}
+                      </div>
+
+                      <div class="mt-2 entity-new-client d-none">
+                        <input type="text" name="{{ form.new_name.html_name }}"
+                               value="{{ form.new_name.value|default:'' }}"
+                               class="form-control form-control-sm{% if form.new_name.errors %} is-invalid{% endif %} mb-1"
+                               placeholder="{% translate 'Company name' %}">
+                        {% if form.new_name.errors %}
+                          <div class="text-danger small">{{ form.new_name.errors }}</div>
+                        {% endif %}
+                        <div class="row g-1">
+                          <div class="col-6">
+                            <input type="text" name="{{ form.new_registration_number.html_name }}"
+                                   value="{{ form.new_registration_number.value|default:'' }}"
+                                   class="form-control form-control-sm"
+                                   placeholder="HRB">
+                          </div>
+                          <div class="col-6">
+                            <input type="text" name="{{ form.new_legal_form.html_name }}"
+                                   value="{{ form.new_legal_form.value|default:'' }}"
+                                   class="form-control form-control-sm"
+                                   placeholder="{% translate 'Legal form' %}">
+                          </div>
+                        </div>
+                        <div class="mt-1">
+                          <label class="form-label form-label-sm mb-0">
+                            {% icon "sitemap" class="me-1" %}{% translate "Parent Company" %}
+                          </label>
+                          {{ form.new_parent }}
+                        </div>
+                      </div>
+                      {% if form.non_field_errors %}
+                        <div class="alert alert-danger small mt-2 mb-0 py-1 px-2">
+                          {{ form.non_field_errors }}
+                        </div>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-3">
+              <button type="button" class="btn btn-secondary"
+                      hx-get="{% url 'data_room:hx-close-modal' %}"
+                      hx-target="#DocumentModal"
+                      hx-swap="innerHTML">
+                {% translate "Cancel" %}
+              </button>
+              <button type="submit" class="btn btn-primary">
+                {% icon "check" class="me-1" %}
+                {% translate "Confirm" %}
+              </button>
+            </div>
+          </form>
+
+          <script>
+            // Single-selection enforcement: When user selects "use existing" or "create new"
+            // for one entity, all other entities are automatically set to "skip".
+            // This enforces the 1:1 relationship between document and client.
+            (function() {
+              const container = document.getElementById('confirm-clients-{{ document.pk }}');
+              if (!container) return;
+
+              function updateVisibility(row, value) {
+                const existingDiv = row.querySelector('.entity-existing-client');
+                const newDiv = row.querySelector('.entity-new-client');
+
+                if (value === 'use_existing') {
+                  existingDiv.classList.remove('d-none');
+                  newDiv.classList.add('d-none');
+                } else if (value === 'create_new') {
+                  existingDiv.classList.add('d-none');
+                  newDiv.classList.remove('d-none');
+                } else {
+                  existingDiv.classList.add('d-none');
+                  newDiv.classList.add('d-none');
+                }
+              }
+
+              function setRowToSkip(row) {
+                const skipRadio = row.querySelector('input[type="radio"][value="skip"]');
+                if (skipRadio && !skipRadio.checked) {
+                  skipRadio.checked = true;
+                  updateVisibility(row, 'skip');
+                }
+              }
+
+              const radios = container.querySelectorAll('input[type="radio"][name*="action"]');
+
+              radios.forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                  const currentRow = this.closest('tr');
+                  updateVisibility(currentRow, this.value);
+
+                  // If selecting use_existing or create_new, set all other rows to skip
+                  if (this.value === 'use_existing' || this.value === 'create_new') {
+                    const allRows = container.querySelectorAll('tbody tr');
+                    allRows.forEach(function(row) {
+                      if (row !== currentRow) {
+                        setRowToSkip(row);
+                      }
+                    });
+                  }
+                });
+
+                // Set initial visibility for checked radios
+                if (radio.checked) {
+                  updateVisibility(radio.closest('tr'), radio.value);
+                }
+              });
+            })();
+          </script>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show"></div>

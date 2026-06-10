@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load i18n progress_tags %}
+{% load lucide_tags %}
+
+{% block title %}{% translate "ZIP Generation Progress" %}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        {% icon "file-zip" class="me-2" %}
+                        {% translate "ZIP Generation Progress" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6>{{ project.name }}</h6>
+
+                    {% if active_task %}
+                        <div class="mt-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-muted">{% translate "Status" %}</span>
+                                <span class="btn btn-sm btn-outline-brand">{{ active_task.get_status_display }}</span>
+                            </div>
+
+                            <div class="progress mb-3 progress-bar-lg">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                     role="progressbar"
+                                     style="width: {{ active_task.progress|floatformat:0 }}%"
+                                     aria-valuenow="{{ active_task.progress|floatformat:0 }}"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100">
+                                    {{ active_task.progress|floatformat:0 }}%
+                                </div>
+                            </div>
+
+                            <div class="text-center text-muted mb-3">
+                                {% icon "spinner" class="me-2" %}
+                                {% if active_task.step_description %}
+                                    {{ active_task.step_description }}
+                                {% else %}
+                                    {% translate "Processing documents..." %}
+                                {% endif %}
+                            </div>
+
+                            <div class="text-center text-muted small">
+                                {% translate "Step" %} {{ active_task.current_step }} {% translate "of" %} {{ active_task.total_steps }}
+                            </div>
+                        </div>
+                    {% else %}
+                        {% if completed_zips %}
+                            <div class="alert alert-success mt-3">
+                                {% icon "check-circle" class="me-2" %}
+                                {% translate "ZIP generation completed!" %}
+                            </div>
+
+                            <div class="list-group mt-3">
+                                {% for zip in completed_zips %}
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            {% icon "file-zip" class="me-2" %}
+                                            {{ zip.filename }}
+                                            <small class="text-muted d-block">
+                                                {{ zip.date_created|date:"d.m.Y H:i" }}
+                                            </small>
+                                        </div>
+                                        <a href="{% url 'data_room:download-project-zip' zip.id %}"
+                                           class="btn btn-sm btn-primary">
+                                            {% icon "download" %} {% translate "Download" %}
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info mt-3">
+                                {% icon "info-circle" class="me-2" %}
+                                {% translate "No ZIP files available. Click the button below to generate one." %}
+                            </div>
+                        {% endif %}
+
+                        <div class="text-center mt-4">
+                            <a href="{% url 'data_room:start-project-zip' project.pk %}"
+                               class="btn btn-primary">
+                                {% icon "file-zip" class="me-2" %}
+                                {% translate "Generate new ZIP" %}
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'project:detail' project.pk %}#data-room-section"
+                       class="btn btn-secondary">
+                        {% icon "arrow-left" class="me-2" %}
+                        {% translate "Back to Data Room" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if active_task %}
+<script>
+    // Auto-refresh the page every 2 seconds while task is active
+    setTimeout(function() {
+        window.location.reload();
+    }, 2000);
+</script>
+{% endif %}
+{% endblock %}

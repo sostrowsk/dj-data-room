@@ -1,0 +1,102 @@
+{% load i18n protected_document_tags %}
+{% load lucide_tags %}
+{% check_permissions protected_document as permission %}
+{% if permission %}
+<tr id="company-document-row-{{ protected_document.pk|stringformat:"s" }}"{% if hx_swap_oob %} hx-swap-oob="true"{% endif %}>
+  <td>
+    {% if protected_document.disabled %}
+      {{ protected_document.name }}
+    {% else %}
+      <a href="#" hx-get="{% url 'data_room:client-doc-page' protected_document.pk %}" hx-target="#DocumentModal">
+        {{ protected_document.name }}
+      </a>
+    {% endif %}
+  </td>
+  <td><span class="btn btn-sm btn-outline-secondary">{{ protected_document.type|upper }}</span></td>
+  <td>
+    {% if protected_document.document_type %}
+      <span class="btn btn-sm btn-outline-brand">{{ protected_document.get_document_type_display }}</span>
+    {% else %}
+      -
+    {% endif %}
+  </td>
+  <td>
+    {% if protected_document.statement_type %}
+      <span class="btn btn-sm btn-outline-brand">{{ protected_document.get_statement_type_display }}</span>
+    {% else %}
+      -
+    {% endif %}
+  </td>
+  <td>{{ protected_document.date_created|date:"d.m.Y" }}</td>
+  <td>
+    {% include "data_room/includes/_status_badges.html" with doc=protected_document show_pending=True %}
+  </td>
+  <td>
+    {% include "data_room/includes/_indexing_badge.html" with doc=protected_document %}
+  </td>
+  <td>
+    {# Client #}
+    {% if protected_document.client_extraction_status == "completed" and protected_document.client %}
+      <span class="btn btn-sm btn-outline-success">
+        {% icon "building" class="me-1" %}{{ protected_document.client.company|truncatechars:15 }}
+      </span>
+    {% elif protected_document.client_extraction_status == "awaiting_confirmation" %}
+      <span class="btn btn-sm btn-outline-warning">{% translate "Awaiting" %}</span>
+    {% else %}
+      -
+    {% endif %}
+  </td>
+  <td class="text-end text-nowrap">
+    {# Download buttons #}
+    <a href="{% url 'data_room:client-doc-pdf' protected_document.pk %}" class="btn btn-sm btn-outline-primary" title="{% translate 'Download' %}">
+      {% icon "download" %}
+    </a>
+    {% if user.type in "broker,admin" %}
+      <a href="{% url 'data_room:client-doc-original' protected_document.pk %}" class="btn btn-sm btn-outline-secondary" title="{% translate 'Original' %}">
+        {% icon "file" %}
+      </a>
+
+      {# Management buttons #}
+      {% with pk_str=protected_document.pk|stringformat:"s" %}{% with target_id="company-document-row-"|add:pk_str %}
+        {% url 'data_room:client-doc-reviewed' protected_document.pk as url_reviewed %}
+        {% url 'data_room:client-doc-disabled' protected_document.pk as url_disabled %}
+        {% url 'data_room:client-doc-enable' protected_document.pk as url_enable %}
+        {% include "data_room/includes/_action_buttons.html" with doc=protected_document target_id=target_id url_reviewed=url_reviewed url_disabled=url_disabled url_enable=url_enable view_type="table" %}
+        {% url 'data_room:client-doc-delete' protected_document.pk as url_delete %}
+        <a class="btn btn-sm btn-outline-danger"
+           hx-post="{{ url_delete }}?view=table"
+           hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+           hx-target="#{{ target_id }}"
+           hx-swap="outerHTML"
+           hx-confirm="{% translate 'Are you sure you want to delete this document?' %}"
+           title="{% translate 'Delete' %}">
+          {% icon "trash" %}
+        </a>
+      {% endwith %}{% endwith %}
+
+      {# Client linking - show one button based on status #}
+      {% if protected_document.client_extraction_status == "pending" or protected_document.client_extraction_status == "processing" %}
+        <span class="btn btn-sm btn-info disabled">
+          {% icon "spinner" %}
+        </span>
+      {% elif protected_document.client_extraction_status == "awaiting_confirmation" %}
+        {# Step 2: Confirm client #}
+        <a class="btn btn-sm btn-warning"
+           hx-get="{% url 'data_room:hx-confirm-clients-client-doc' protected_document.pk %}"
+           hx-target="#DocumentModal"
+           title="{% translate 'Confirm client' %}">
+          {% icon "user-check" %}
+        </a>
+      {% else %}
+        {# Step 3: Edit client (after completed/skipped) #}
+        <a class="btn btn-sm btn-outline-dark"
+           hx-get="{% url 'data_room:hx-edit-client-client-doc' protected_document.pk %}"
+           hx-target="#DocumentModal"
+           title="{% translate 'Edit client' %}">
+          {% icon "building" %}
+        </a>
+      {% endif %}
+    {% endif %}
+  </td>
+</tr>
+{% endif %}

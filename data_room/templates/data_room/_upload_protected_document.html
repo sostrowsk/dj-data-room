@@ -1,0 +1,5 @@
+<form id="UploadProtectedDocumentForm" class="form-bb" action="{% url "data_room:create" project.pk %}" method="post" name="UploadProtectedDocumentForm" enctype="multipart/form-data">{% csrf_token %}{{ upload_protected_document_form.media }}
+  <div>
+      {% include "_bootstrap4_form.html" with form=upload_protected_document_form %}
+  </div>
+</form>

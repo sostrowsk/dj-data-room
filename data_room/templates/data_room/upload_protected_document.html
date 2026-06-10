@@ -1,0 +1,7 @@
+{% extends "base_container.html" %}{% load static i18n %}
+
+{% block title %}{% translate "Upload files" %}{% endblock %}
+
+{% block content %}
+  {% include "data_room/_upload_protected_document.html" %}
+{% endblock %}

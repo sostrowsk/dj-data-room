@@ -1,0 +1,20 @@
+{% load i18n %}
+{% load lucide_tags %}
+<a class="btn btn-sm btn-outline-primary btn-rounded d-print-none my-auto ms-auto" data-bs-toggle="modal" data-bs-target="#zip-info-modal">
+  {% icon "clipboard-question" %} {% translate "info" %}
+</a>
+<div class="modal fade" id="zip-info-modal" tabindex="-1" aria-labelledby="zip-info-label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h5 class="modal-title">
+              {% translate "Download info" %}
+          </h5>
+          <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        {% translate "Only documents classified as reviewed are included  in the ZIP file." %}
+      </div>
+    </div>
+  </div>
+</div>

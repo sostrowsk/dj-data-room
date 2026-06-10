@@ -1,0 +1,383 @@
+{% load i18n %}
+{% load lucide_tags %}
+<div id="upload-documents">
+  <div class="modal fade show d-block upload-modal-backdrop" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="uploadModalLabel">
+            {% icon "cloud-arrow-up" class="me-2" %}{% translate "Upload Documents" %}
+          </h5>
+          <button type="button" class="btn-close" aria-label="Close"
+                  hx-get="{% url 'data_room:hx-empty' project.pk %}"
+                  hx-target="#upload-documents"
+                  hx-swap="outerHTML"></button>
+        </div>
+        <form id="uploadForm" method="post" enctype="multipart/form-data"
+              data-upload-url="{% url upload_url_name project.pk %}">
+          {% csrf_token %}
+          <div class="modal-body">
+            {% if form.errors %}
+              <div class="alert alert-danger">
+                {{ form.errors }}
+              </div>
+            {% endif %}
+            {% if upload_errors %}
+              <div class="alert alert-warning">
+                <strong>{% translate "Some files were skipped:" %}</strong>
+                <ul class="mb-0 mt-2">
+                  {% for error in upload_errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+
+            <!-- Drag and Drop Zone -->
+            <div id="drop-zone" class="border border-2 border-dashed rounded-3 p-5 text-center mb-4 position-relative upload-dropzone">
+              <input type="file" name="files" id="file-input" class="d-none" multiple
+                     accept=".pdf,.docx,.doc,.odt,.gif,.png,.jpg,.jpeg,.webp">
+              <div id="drop-zone-content">
+                {% icon "cloud-arrow-up" class="mb-3 text-muted icon-3x" %}
+                <p class="mb-2 fs-5">{% translate "Drag and drop files here" %}</p>
+                <p class="text-muted mb-3">{% translate "or" %}</p>
+                <label for="file-input" class="btn btn-outline-primary">
+                  {% icon "folder-open" class="me-2" %}{% translate "Browse files" %}
+                </label>
+                <p class="text-muted mt-3 small">
+                  {% translate "Supported formats: PDF, DOCX, DOC, ODT, GIF, PNG, JPG, JPEG, WEBP" %}
+                </p>
+              </div>
+            </div>
+
+            <!-- File List Preview -->
+            <div id="file-list" class="mb-4 d-none">
+              <h6 class="mb-3">
+                {% icon "files" class="me-2" %}{% translate "Selected files" %}
+                <span id="file-count" class="btn btn-sm btn-outline-primary ms-2">0</span>
+              </h6>
+              <div id="file-items" class="list-group list-group-flush upload-file-list"></div>
+            </div>
+
+            <!-- Upload Progress Panel (hidden until upload starts) -->
+            <div id="upload-progress" class="d-none">
+              <h6 class="mb-3">
+                {% icon "cloud-arrow-up" class="me-2" %}{% translate "Uploading files" %}
+                <span id="progress-count" class="btn btn-sm btn-outline-primary ms-2"></span>
+              </h6>
+              <div id="progress-items" class="list-group list-group-flush upload-progress-list"></div>
+            </div>
+
+          </div>
+
+          <div class="modal-footer d-flex justify-content-between">
+            <button type="button" class="btn btn-outline-secondary"
+                    hx-get="{% url 'data_room:hx-empty' project.pk %}"
+                    hx-target="#upload-documents"
+                    hx-swap="outerHTML">
+              {% icon "xmark" class="me-1" %}{% translate "Cancel" %}
+            </button>
+            <button type="submit" id="submit-btn" class="btn btn-primary" disabled>
+              {% icon "cloud-arrow-up" class="me-2" %}{% translate "Upload" %}
+              <span id="submit-count"></span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const dropZone = document.getElementById('drop-zone');
+  const fileInput = document.getElementById('file-input');
+  const fileList = document.getElementById('file-list');
+  const fileItems = document.getElementById('file-items');
+  const fileCount = document.getElementById('file-count');
+  const submitBtn = document.getElementById('submit-btn');
+  const submitCount = document.getElementById('submit-count');
+
+  let selectedFiles = [];
+
+  // File type icon SVGs (rendered server-side via Lucide)
+  const fileIcons = {
+    'pdf': `{% icon "file-pdf" class="text-danger" %}`,
+    'doc': `{% icon "file-word" class="text-primary" %}`,
+    'docx': `{% icon "file-word" class="text-primary" %}`,
+    'odt': `{% icon "file-word" class="text-primary" %}`,
+    'png': `{% icon "file-image" class="text-success" %}`,
+    'jpg': `{% icon "file-image" class="text-success" %}`,
+    'jpeg': `{% icon "file-image" class="text-success" %}`,
+    'gif': `{% icon "file-image" class="text-success" %}`,
+    'webp': `{% icon "file-image" class="text-success" %}`,
+  };
+  const defaultFileIcon = `{% icon "file" class="text-secondary" %}`;
+
+  function getFileIcon(filename) {
+    const ext = filename.split('.').pop().toLowerCase();
+    return fileIcons[ext] || defaultFileIcon;
+  }
+
+  function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  }
+
+  function updateFileList() {
+    fileItems.innerHTML = '';
+
+    if (selectedFiles.length === 0) {
+      fileList.classList.add('d-none');
+      submitBtn.disabled = true;
+      submitCount.textContent = '';
+      return;
+    }
+
+    fileList.classList.remove('d-none');
+    fileCount.textContent = selectedFiles.length;
+    submitBtn.disabled = false;
+    submitCount.textContent = '(' + selectedFiles.length + ')';
+
+    selectedFiles.forEach((file, index) => {
+      const item = document.createElement('div');
+      item.className = 'list-group-item d-flex justify-content-between align-items-center py-2';
+      item.innerHTML = `
+        <div class="d-flex align-items-center">
+          <span class="me-3 fs-5">${getFileIcon(file.name)}</span>
+          <div>
+            <div class="fw-medium text-truncate text-truncate-300">${file.name}</div>
+            <small class="text-muted">${formatFileSize(file.size)}</small>
+          </div>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-danger border-0" data-index="${index}">
+          {% icon "xmark" %}
+        </button>
+      `;
+      fileItems.appendChild(item);
+    });
+
+    // Add remove handlers
+    fileItems.querySelectorAll('button[data-index]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const index = parseInt(this.dataset.index);
+        selectedFiles.splice(index, 1);
+        updateFileInput();
+        updateFileList();
+      });
+    });
+  }
+
+  function updateFileInput() {
+    const dt = new DataTransfer();
+    selectedFiles.forEach(file => dt.items.add(file));
+    fileInput.files = dt.files;
+  }
+
+  function addFiles(files) {
+    const allowedExtensions = ['pdf', 'docx', 'doc', 'odt', 'gif', 'png', 'jpg', 'jpeg', 'webp'];
+
+    Array.from(files).forEach(file => {
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (allowedExtensions.includes(ext)) {
+        // Check for duplicates by name
+        if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
+          selectedFiles.push(file);
+        }
+      }
+    });
+
+    updateFileInput();
+    updateFileList();
+  }
+
+  // Drag and drop handlers
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, preventDefaults, false);
+    document.body.addEventListener(eventName, preventDefaults, false);
+  });
+
+  function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  ['dragenter', 'dragover'].forEach(eventName => {
+    dropZone.addEventListener(eventName, highlight, false);
+  });
+
+  ['dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, unhighlight, false);
+  });
+
+  function highlight() {
+    dropZone.style.borderColor = '#0d6efd';
+    dropZone.style.backgroundColor = '#f8f9fa';
+  }
+
+  function unhighlight() {
+    dropZone.style.borderColor = '#dee2e6';
+    dropZone.style.backgroundColor = '';
+  }
+
+  dropZone.addEventListener('drop', function(e) {
+    const dt = e.dataTransfer;
+    addFiles(dt.files);
+  });
+
+  // File input change handler
+  fileInput.addEventListener('change', function() {
+    addFiles(this.files);
+  });
+
+  // Click on drop zone opens file dialog
+  dropZone.addEventListener('click', function(e) {
+    if (e.target.tagName !== 'LABEL' && e.target.tagName !== 'INPUT') {
+      fileInput.click();
+    }
+  });
+
+  // --- Per-file XHR upload with progress ---
+  const form = document.getElementById('uploadForm');
+  const uploadProgress = document.getElementById('upload-progress');
+  const progressItems = document.getElementById('progress-items');
+  const progressCount = document.getElementById('progress-count');
+  const cancelBtn = document.querySelector('.modal-footer .btn-outline-secondary');
+  const uploadUrl = form.dataset.uploadUrl;
+  const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+  const emptyUrl = "{% url 'data_room:hx-empty' project.pk %}";
+
+  const iconDone = `{% icon "circle-check" class="text-success" %}`;
+  const iconError = `{% icon "circle-x" class="text-danger" %}`;
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (selectedFiles.length === 0) return;
+
+    // Switch UI: hide selection, show progress
+    dropZone.classList.add('d-none');
+    fileList.classList.add('d-none');
+    uploadProgress.classList.remove('d-none');
+    submitBtn.disabled = true;
+    progressCount.textContent = '0 / ' + selectedFiles.length;
+
+    // Build progress rows
+    progressItems.innerHTML = '';
+    const rows = selectedFiles.map((file, i) => {
+      const row = document.createElement('div');
+      row.className = 'list-group-item py-2';
+      row.innerHTML = `
+        <div class="d-flex align-items-center mb-1">
+          <span class="me-3 fs-5">${getFileIcon(file.name)}</span>
+          <div class="flex-grow-1 min-w-0">
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-medium text-truncate text-truncate-300">${file.name}</span>
+              <span class="upload-status ms-2 text-muted small">{% translate "Waiting" %}</span>
+            </div>
+            <div class="progress mt-1 progress-bar-sm">
+              <div class="progress-bar" role="progressbar" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+      `;
+      progressItems.appendChild(row);
+      return {
+        el: row,
+        bar: row.querySelector('.progress-bar'),
+        status: row.querySelector('.upload-status'),
+      };
+    });
+
+    // Upload files sequentially
+    let completed = 0;
+    let hasErrors = false;
+
+    async function uploadNext(index) {
+      if (index >= selectedFiles.length) {
+        // All done — refresh document list
+        progressCount.textContent = completed + ' / ' + selectedFiles.length;
+        if (typeof htmx !== 'undefined') {
+          htmx.ajax('GET', emptyUrl, {target: '#show-documents', swap: 'outerHTML'});
+        }
+        // Change footer button to Close
+        submitBtn.classList.remove('btn-primary');
+        submitBtn.classList.add('btn-outline-secondary');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `{% icon "xmark" class="me-1" %}{% translate "Close" %}`;
+        submitBtn.type = 'button';
+        submitBtn.addEventListener('click', function() {
+          htmx.ajax('GET', emptyUrl, {target: '#upload-documents', swap: 'outerHTML'});
+        });
+        cancelBtn.classList.add('d-none');
+        return;
+      }
+
+      const file = selectedFiles[index];
+      const row = rows[index];
+
+      row.status.textContent = '{% translate "Uploading..." %}';
+      row.bar.classList.add('progress-bar-animated', 'progress-bar-striped');
+
+      const fd = new FormData();
+      fd.append('csrfmiddlewaretoken', csrfToken);
+      fd.append('files', file);
+      // Forward document_type if present
+      const docType = form.querySelector('[name=document_type]');
+      if (docType) fd.append('document_type', docType.value);
+
+      try {
+        const result = await new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open('POST', uploadUrl);
+          xhr.setRequestHeader('HX-Request', 'true');
+          xhr.setRequestHeader('X-Single-Upload', 'true');
+
+          xhr.upload.onprogress = function(evt) {
+            if (evt.lengthComputable) {
+              const pct = Math.round((evt.loaded / evt.total) * 100);
+              row.bar.style.width = pct + '%';
+            }
+          };
+
+          xhr.onload = function() {
+            try {
+              resolve(JSON.parse(xhr.responseText));
+            } catch {
+              reject(new Error('Invalid response'));
+            }
+          };
+          xhr.onerror = function() { reject(new Error('Network error')); };
+          xhr.send(fd);
+        });
+
+        row.bar.classList.remove('progress-bar-animated', 'progress-bar-striped');
+        if (result.ok) {
+          row.bar.style.width = '100%';
+          row.bar.classList.add('bg-success');
+          row.status.innerHTML = iconDone;
+        } else {
+          row.bar.classList.add('bg-danger');
+          row.status.innerHTML = iconError + ' <span class="text-danger small">' + result.error + '</span>';
+          hasErrors = true;
+        }
+      } catch (err) {
+        row.bar.classList.remove('progress-bar-animated', 'progress-bar-striped');
+        row.bar.classList.add('bg-danger');
+        row.status.innerHTML = iconError + ' <span class="text-danger small">' + err.message + '</span>';
+        hasErrors = true;
+      }
+
+      completed++;
+      progressCount.textContent = completed + ' / ' + selectedFiles.length;
+      await uploadNext(index + 1);
+    }
+
+    uploadNext(0);
+  });
+})();
+</script>

@@ -1,0 +1,65 @@
+{% load i18n %}
+{% load lucide_tags %}
+<div class="modal fade show d-block" tabindex="-1" id="editClientModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {% icon "building" class="me-2" %}
+          {% translate "Edit linked client" %}
+        </h5>
+        <button type="button" class="btn-close"
+                hx-get="{% url 'data_room:hx-close-modal' %}"
+                hx-target="#DocumentModal"
+                hx-swap="innerHTML"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted mb-3">
+          <strong>{% translate "Document" %}:</strong> {{ document.name|truncatechars:50 }}
+        </p>
+
+        {% if document.client %}
+        <div class="alert alert-info mb-3">
+          {% icon "link" class="me-2" %}
+          {% translate "Currently linked to" %}: <strong>{{ document.client.company }}</strong>
+        </div>
+        {% else %}
+        <div class="alert alert-secondary mb-3">
+          {% icon "unlink" class="me-2" %}
+          {% translate "No client currently linked" %}
+        </div>
+        {% endif %}
+
+        <form hx-post="{% url 'data_room:hx-edit-client' project.pk document.pk %}"
+              hx-target="#DocumentModal"
+              hx-swap="innerHTML">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label for="id_linked_client" class="form-label fw-bold">
+              {% icon "users" class="me-1" %}{% translate "Select client" %}
+            </label>
+            {{ form.linked_client }}
+            <small class="text-muted d-block mt-1">
+              {% translate "Select a client or leave empty to unlink." %}
+            </small>
+          </div>
+
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <button type="button" class="btn btn-secondary"
+                    hx-get="{% url 'data_room:hx-close-modal' %}"
+                    hx-target="#DocumentModal"
+                    hx-swap="innerHTML">
+              {% translate "Cancel" %}
+            </button>
+            <button type="submit" class="btn btn-primary">
+              {% icon "save" class="me-1" %}
+              {% translate "Save" %}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show"></div>

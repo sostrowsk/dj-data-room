@@ -1,0 +1,1119 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-10 18:41+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: forms/confirm_clients.py:29 forms/edit_client.py:16
+#: templates/data_room/_hx_edit_client_client_doc.html:62
+msgid "Use existing client"
+msgstr "Bestehenden Kunden verwenden"
+
+#: forms/confirm_clients.py:30 forms/edit_client.py:17
+#: templates/data_room/_hx_edit_client_client_doc.html:70
+msgid "Create new client"
+msgstr "Neuen Kunden anlegen"
+
+#: forms/confirm_clients.py:31
+msgid "Skip this entity"
+msgstr "Diese Entität überspringen"
+
+#: forms/confirm_clients.py:43
+msgid "-- Select existing client --"
+msgstr "-- Bestehenden Kunden auswählen --"
+
+#: forms/confirm_clients.py:45
+msgid "Existing Client"
+msgstr "Bestehender Kunde"
+
+#: forms/confirm_clients.py:67 forms/edit_client.py:64
+msgid "(No parent - create as holding)"
+msgstr "(Kein übergeordnetes Element – als Platzhalter erstellen)"
+
+#: forms/confirm_clients.py:69 forms/edit_client.py:66
+#: templates/data_room/_hx_confirm_clients.html:115
+#: templates/data_room/_hx_edit_client_client_doc.html:111
+msgid "Parent Company"
+msgstr "Muttergesellschaft"
+
+#: forms/confirm_clients.py:113
+msgid "Please select an existing client"
+msgstr "Bitte wählen Sie einen bestehenden Kunden aus"
+
+#: forms/confirm_clients.py:118
+msgid "Please enter a name for the new client"
+msgstr "Bitte geben Sie einen Namen für den neuen Kunden ein"
+
+#: forms/confirm_clients.py:122
+#, python-format
+msgid ""
+"Company '%(name)s' already exists. Please use 'Use existing client' instead."
+msgstr ""
+"Das Unternehmen „%(name)s“ existiert bereits. Bitte wählen Sie stattdessen "
+"„Vorhandenen Kunden verwenden“."
+
+#: forms/confirm_clients.py:132 forms/edit_client.py:114
+#, python-format
+msgid ""
+"Similar client found: \"%(name)s\" (ID %(id)s). Please check or select the "
+"existing client."
+msgstr ""
+"Ähnlicher Mandant gefunden: „%(name)s“ (ID %(id)s). Bitte überprüfen Sie den"
+" vorhandenen Mandanten oder wählen Sie ihn aus."
+
+#: forms/edit_client.py:30 forms/upload_protected_document.py:108
+#: models/protected_client_document.py:34
+#: models/protected_project_document.py:24
+#: templates/data_room/_hx_edit_client_client_doc.html:41
+#: templates/data_room/_show_protected_documents.html:54
+#: templates/data_room/_show_protected_documents.html:105
+msgid "Document Type"
+msgstr "Dokumententyp"
+
+#: forms/edit_client.py:37 models/protected_client_document.py:44
+#: templates/data_room/_hx_edit_client_client_doc.html:47
+#: templates/data_room/_show_protected_documents.html:55
+msgid "Statement Type"
+msgstr "Abschlussart"
+
+#: forms/edit_client.py:101
+msgid "Company name is required."
+msgstr "Firmenname ist erforderlich."
+
+#: forms/edit_client.py:105 views/hx/edit_client.py:83
+msgid "A company with this name already exists."
+msgstr "Es gibt bereits ein Unternehmen mit diesem Namen."
+
+#: forms/upload_protected_document.py:34
+msgid "Select type"
+msgstr "Typ auswählen"
+
+#: forms/upload_protected_document.py:36
+msgid "Select a type to classify this document"
+msgstr "Wählen Sie einen Typ, um dieses Dokument zu klassifizieren"
+
+#: forms/upload_protected_document.py:91
+msgid "Project Document"
+msgstr "Projektdokument"
+
+#: forms/upload_protected_document.py:92
+msgid "Company Document"
+msgstr "Firmendokument"
+
+#: forms/upload_protected_document.py:96
+msgid "Files"
+msgstr "Dateien"
+
+#: forms/upload_protected_document.py:115
+#: forms/upload_protected_document.py:121
+msgid "Category"
+msgstr "Kategorie"
+
+#: forms/upload_protected_document.py:116
+#: forms/upload_protected_document.py:122
+msgid "Select category"
+msgstr "Kategorie auswählen"
+
+#: models/choices.py:8 models/protected_base_document.py:302
+msgid "Client"
+msgstr "Kunde"
+
+#: models/choices.py:9
+msgid "Broker"
+msgstr "Berater"
+
+#: models/choices.py:10
+msgid "Leasing partner"
+msgstr "Leasing-Partner"
+
+#: models/choices.py:11 models/protected_base_document.py:304
+msgid "Admin"
+msgstr "Admin"
+
+#: models/choices.py:18
+msgid "Single Entity"
+msgstr "Einzelabschluss"
+
+#: models/choices.py:19
+msgid "Consolidated"
+msgstr "Konzernabschluss"
+
+#: models/choices.py:25
+msgid "Commercial Register"
+msgstr "Amtsgericht"
+
+#: models/choices.py:26
+msgid "Rating"
+msgstr "Bewertung"
+
+#: models/choices.py:27
+msgid "Annual Report"
+msgstr "Jahresabschluss"
+
+#: models/choices.py:28
+msgid "Banking Facilities"
+msgstr "Bankdienstleistungen"
+
+#: models/choices.py:29
+msgid "Business Plan"
+msgstr "Business Plan"
+
+#: models/choices.py:30
+msgid "Interim Figures"
+msgstr "Vorläufige Zahlen"
+
+#: models/choices.py:31
+msgid "Structure Chart"
+msgstr "Organigramm"
+
+#: models/choices.py:32
+msgid "Company Presentation"
+msgstr "Unternehmenspräsentation"
+
+#: models/choices.py:33
+msgid "Company Description"
+msgstr "Firmenbeschreibung"
+
+#: models/choices.py:34
+msgid "Change Concept"
+msgstr "Konzept ändern"
+
+#: models/choices.py:35 models/choices.py:48
+msgid "Other"
+msgstr "Sonstige"
+
+#: models/choices.py:41
+msgid "Asset Specification"
+msgstr "Anlagenbeschreibung"
+
+#: models/choices.py:42
+msgid "Offer"
+msgstr "Angebot"
+
+#: models/choices.py:43
+msgid "Order Confirmation"
+msgstr "Auftragsbestätigung"
+
+#: models/choices.py:44
+msgid "Invoice"
+msgstr "Rechnung"
+
+#: models/choices.py:45
+msgid "Acceptance Confirmation"
+msgstr "Bestätigung der Annahme"
+
+#: models/choices.py:46
+msgid "Lease Contract"
+msgstr "Mietvertrag"
+
+#: models/choices.py:47
+msgid "Info Memo"
+msgstr "Info-Memo"
+
+#: models/project_company_link.py:20
+msgid "Active for Info-Memo"
+msgstr "Aktiv für Info-Memo"
+
+#: models/project_company_link.py:22
+msgid ""
+"Whether this company is included in Info-Memo generation for this project"
+msgstr ""
+"Ob dieses Unternehmen bei der Erstellung des Info-Memos für dieses Projekt "
+"berücksichtigt wird"
+
+#: models/project_company_link.py:28
+msgid "Project Company Link"
+msgstr "Projekt Unternehmen Link"
+
+#: models/project_company_link.py:29
+msgid "Project Company Links"
+msgstr "Projektunternehmen – Links"
+
+#: models/project_zip.py:20
+msgid "ZIP File"
+msgstr "ZIP Datei"
+
+#: models/project_zip.py:21 templates/data_room/project_zip_progress.html:24
+msgid "Status"
+msgstr "Status"
+
+#: models/project_zip.py:22
+msgid "Date created"
+msgstr "Erstellungsdatum"
+
+#: models/project_zip.py:25
+msgid "Project ZIP"
+msgstr "Projekt ZIP"
+
+#: models/project_zip.py:26
+msgid "Project ZIPs"
+msgstr "Projekt-ZIPs"
+
+#: models/protected_base_document.py:31 models/protected_client_document.py:52
+#: models/protected_client_document.py:66
+#: models/protected_project_document.py:32
+#: templates/data_room/includes/_indexing_badge.html:6
+#: templates/data_room/includes/_status_badges.html:8
+msgid "Pending"
+msgstr "Ausstehend"
+
+#: models/protected_base_document.py:32 models/protected_client_document.py:53
+#: models/protected_client_document.py:67
+#: models/protected_project_document.py:33
+#: templates/data_room/_zip_button.html:35
+msgid "Processing"
+msgstr "In Bearbeitung"
+
+#: models/protected_base_document.py:33 models/protected_client_document.py:68
+msgid "Awaiting Confirmation"
+msgstr "Wartet auf Bestätigung"
+
+#: models/protected_base_document.py:34 models/protected_client_document.py:54
+#: models/protected_client_document.py:69
+#: models/protected_project_document.py:34
+msgid "Completed"
+msgstr "Abgeschlossen"
+
+#: models/protected_base_document.py:35 models/protected_client_document.py:55
+#: models/protected_client_document.py:70
+#: models/protected_project_document.py:35
+#: templates/data_room/includes/_indexing_badge.html:8
+msgid "Failed"
+msgstr "Fehlgeschlagen"
+
+#: models/protected_base_document.py:36 models/protected_client_document.py:56
+#: models/protected_client_document.py:71
+#: models/protected_project_document.py:36
+msgid "Skipped"
+msgstr "Übersprungen"
+
+#: models/protected_base_document.py:43
+#: templates/data_room/_show_protected_documents.html:52
+#: templates/data_room/_show_protected_documents.html:104
+msgid "Name"
+msgstr "Name"
+
+#: models/protected_base_document.py:46
+msgid "File (PDF, DOCX, DOC, ODT, GIF, PNG, JPG, JPEG, WEBP)"
+msgstr "Datei (PDF, DOCX, DOC, ODT, GIF, PNG, JPG, JPEG, WEBP)"
+
+#: models/protected_base_document.py:52
+msgid "Original file (DOCX, DOC, ODT)"
+msgstr "Originaldatei (DOCX, DOC, ODT)"
+
+#: models/protected_base_document.py:59
+msgid "Fiscal Year"
+msgstr "Geschäftsjahr"
+
+#: models/protected_base_document.py:61
+msgid "Fiscal Month"
+msgstr "Geschäftsmonat"
+
+#: models/protected_base_document.py:66
+msgid "Use AI"
+msgstr "AI verwenden"
+
+#: models/protected_base_document.py:72
+msgid "File Hash (SHA256)"
+msgstr "Datei-Hash (SHA256)"
+
+#: models/protected_base_document.py:73
+msgid "SHA256 hash for duplicate detection"
+msgstr "SHA256-Hash zur Erkennung von Duplikaten"
+
+#: models/protected_base_document.py:77
+msgid "Created by user type"
+msgstr "Erstellt von Benutzertyp"
+
+#: models/protected_base_document.py:82
+#: templates/data_room/_hx_confirm_clients.html:95
+msgid "Company name"
+msgstr "Firmenname"
+
+#: models/protected_base_document.py:87
+#: templates/data_room/includes/_status_badges.html:6
+msgid "Reviewed"
+msgstr "Geprüft"
+
+#: models/protected_base_document.py:88
+#: templates/data_room/includes/_status_badges.html:4
+msgid "Disabled"
+msgstr "Deaktiviert"
+
+#: models/protected_base_document.py:89
+msgid "Indexing status"
+msgstr "Status der Indizierung"
+
+#: models/protected_base_document.py:90
+msgid "Indexing attempts"
+msgstr "Indizierungsversuche"
+
+#: models/protected_base_document.py:93
+#: models/protected_client_document.py:137
+msgid "Company Info JSON"
+msgstr "Firmeninfo-JSON"
+
+#: models/protected_base_document.py:96
+#: models/protected_client_document.py:140
+msgid "Extracted company information as JSON"
+msgstr "Extrahierte Firmeninformationen als JSON"
+
+#: models/protected_base_document.py:98
+msgid "date_created"
+msgstr "date_created"
+
+#: models/protected_base_document.py:99
+msgid "date_updated"
+msgstr "date_updated"
+
+#: models/protected_base_document.py:102
+msgid "Protected Document"
+msgstr "Geschütztes Dokument"
+
+#: models/protected_base_document.py:103
+msgid "Protected Documents"
+msgstr "Geschützte Dokumente"
+
+#: models/protected_base_document.py:214
+msgid "Unnamed Document"
+msgstr "Unbenanntes Dokument"
+
+#: models/protected_base_document.py:303
+msgid "Partner"
+msgstr "Partner"
+
+#: models/protected_client_document.py:48
+msgid "GuV extracted"
+msgstr "GuV extrahiert"
+
+#: models/protected_client_document.py:49
+msgid "Bilanz extracted"
+msgstr "Bilanz extrahiert"
+
+#: models/protected_client_document.py:59
+msgid "Financial extraction status"
+msgstr "Status der Datenauswertung"
+
+#: models/protected_client_document.py:74
+msgid "Client extraction status"
+msgstr "Kunden-Extraktion-Status"
+
+#: models/protected_client_document.py:80
+msgid "Extracted clients data"
+msgstr "Extrahierte Kundendaten"
+
+#: models/protected_client_document.py:83
+msgid "Temporarily stores extracted client data awaiting user confirmation"
+msgstr ""
+"Speichert extrahierte Kundendaten vorübergehend, bis der Benutzer sie "
+"bestätigt"
+
+#: models/protected_client_document.py:87
+msgid "GuV JSON"
+msgstr "GuV JSON"
+
+#: models/protected_client_document.py:90
+msgid "Extracted GuV data as JSON"
+msgstr "Extrahierte GuV-Daten als JSON"
+
+#: models/protected_client_document.py:93
+msgid "Bilanz JSON"
+msgstr "Bilanz JSON"
+
+#: models/protected_client_document.py:96
+msgid "Extracted Bilanz data as JSON"
+msgstr "Bilanzdaten als JSON extrahiert"
+
+#: models/protected_client_document.py:99
+msgid "GuV JSON (mapped + classified)"
+msgstr ""
+
+#: models/protected_client_document.py:102
+msgid "guv_json enriched with per-position aggregate roles for verification"
+msgstr ""
+
+#: models/protected_client_document.py:110
+msgid "Bilanz JSON (mapped to slots)"
+msgstr ""
+
+#: models/protected_client_document.py:113
+msgid ""
+"Per-doc Bilanz-Slot-Mapping (Phase A scope: slot-based). Populated at upload"
+" time."
+msgstr ""
+
+#: models/protected_client_document.py:116
+msgid "GuV pages (per statement_type)"
+msgstr ""
+
+#: models/protected_client_document.py:120
+msgid ""
+"1-based PDF page numbers for the GuV section, keyed by statement_type "
+"('single', 'consolidated', 'notes'). Consumed by the Phase-4 PDF slicer; "
+"missing/empty keys trigger a full-PDF fallback."
+msgstr ""
+
+#: models/protected_client_document.py:127
+msgid "Bilanz pages (per statement_type)"
+msgstr ""
+
+#: models/protected_client_document.py:131
+msgid ""
+"1-based PDF page numbers for the Bilanz section, keyed by statement_type "
+"('single', 'consolidated', 'notes'). Same fallback contract as pages_guv."
+msgstr ""
+
+#: models/protected_client_document.py:147
+msgid "Accounting framework"
+msgstr "Rechnungslegungsstandard"
+
+#: models/protected_client_document.py:152
+msgid ""
+"Detected accounting framework code (DE_HGB_GKV / AT_UGB_GKV / IFRS_NATURE / "
+"…)."
+msgstr ""
+
+#: models/protected_client_document.py:155
+msgid "Accounting framework confidence"
+msgstr ""
+
+#: models/protected_client_document.py:158
+msgid "Detection confidence 0.0-1.0; <0.5 logged but does not block."
+msgstr ""
+
+#: models/protected_client_document.py:161
+msgid "Accounting framework evidence"
+msgstr ""
+
+#: models/protected_client_document.py:164
+msgid "List of strings (cited indicators) that triggered detection."
+msgstr ""
+
+#: models/protected_client_document.py:167
+msgid "Accounting framework spec_hash"
+msgstr ""
+
+#: models/protected_client_document.py:171
+msgid ""
+"SHA256 of the YAML frontmatter at detection time — invalidates cached "
+"mappings."
+msgstr ""
+
+#: models/protected_client_document.py:174
+msgid "GuV mapping (v2 preview, shadow field)"
+msgstr ""
+
+#: models/protected_client_document.py:178
+msgid ""
+"Stage-3 shadow cache for the v2 spec-driven compiler. v1 reader/writer "
+"ignores it. Stage 4 cutover flips v2 to main `json_guv_mapped`; Stage 5 "
+"drops this field."
+msgstr ""
+
+#: models/protected_client_document.py:202
+msgid "GuV mapping status"
+msgstr "GuV-Mapping-Status"
+
+#: models/protected_client_document.py:209
+msgid "Bilanz mapping status"
+msgstr "Bilanz-Mapping-Status"
+
+#: models/protected_client_document.py:235
+msgid "Per-doc aggregate snapshot (review-only)"
+msgstr ""
+
+#: models/protected_client_document.py:239
+msgid ""
+"Flat single-fiscal-year aggregate computed by the Self-Review-Loop. "
+"Audit/review artefact only — the memo renderer ignores this field."
+msgstr ""
+
+#: models/protected_client_document.py:245
+msgid "Review-Loop status"
+msgstr "Review-Loop-Status"
+
+#: models/protected_client_document.py:249
+msgid "State of the upload-time Self-Review-Loop for this doc."
+msgstr ""
+
+#: models/protected_client_document.py:252
+msgid "Review-Loop combined score"
+msgstr ""
+
+#: models/protected_client_document.py:255
+msgid "0.0–1.0 weighted score of the best iteration."
+msgstr ""
+
+#: models/protected_client_document.py:258
+msgid "Review-Loop audit trail"
+msgstr ""
+
+#: models/protected_client_document.py:262
+msgid ""
+"Per-iteration audit records: hard-check findings, LLM review result, "
+"combined_score, tokens, selected_as_best."
+msgstr ""
+
+#: models/protected_client_document.py:267
+msgid "Review cycle id"
+msgstr "Review-Zyklus-ID"
+
+#: models/protected_client_document.py:271
+msgid ""
+"Per-cycle UUID. Re-uploading or force-reprocessing starts a new cycle and "
+"freezes new pre_review_snapshots."
+msgstr ""
+
+#: models/protected_client_document.py:276
+msgid "GuV pre-review snapshot"
+msgstr ""
+
+#: models/protected_client_document.py:279
+msgid "Run-0 GuV extraction frozen for the current review_cycle_id."
+msgstr ""
+
+#: models/protected_client_document.py:282
+msgid "Bilanz pre-review snapshot"
+msgstr ""
+
+#: models/protected_client_document.py:285
+msgid "Run-0 Bilanz extraction frozen for the current review_cycle_id."
+msgstr ""
+
+#: models/protected_client_document.py:288
+msgid "Mapped GuV pre-review snapshot"
+msgstr ""
+
+#: models/protected_client_document.py:291
+msgid "Run-0 mapping frozen for the current review_cycle_id."
+msgstr ""
+
+#: models/protected_client_document.py:294
+msgid "Pre-review snapshot meta"
+msgstr ""
+
+#: models/protected_client_document.py:297
+msgid ""
+"{cycle_id, frozen_at, extraction_model, prompt_version} stamped at first "
+"freeze of the cycle."
+msgstr ""
+
+#: models/protected_client_document.py:301
+msgid "Protected Client Document"
+msgstr "Geschütztes Kundendokument"
+
+#: models/protected_client_document.py:302
+msgid "Protected Client Documents"
+msgstr "Geschützte Kundendokumente"
+
+#: models/protected_project_document.py:39
+msgid "Extraction status"
+msgstr "Extraktionsstatus"
+
+#: models/protected_project_document.py:46
+msgid "Financing Object JSON"
+msgstr "JSON-Objekt „Finanzierung“"
+
+#: models/protected_project_document.py:49
+msgid "Extracted financing object data as JSON"
+msgstr "Ausgewertete Daten zum Finanzierungsobjekt als JSON"
+
+#: models/protected_project_document.py:52
+msgid "Risk Factors JSON"
+msgstr "Risikofaktoren JSON"
+
+#: models/protected_project_document.py:55
+msgid "Extracted risk factors as JSON"
+msgstr "Extrahierte Risikofaktoren als JSON"
+
+#: models/protected_project_document.py:59
+msgid "Protected Project Document"
+msgstr "Geschütztes Projektdokument"
+
+#: models/protected_project_document.py:60
+msgid "Protected Project Documents"
+msgstr "Geschützte Projektdokumente"
+
+#: templates/data_room/_company_overview.html:3
+msgid "Company Overview"
+msgstr "Firmenübersicht"
+
+#: templates/data_room/_company_overview.html:8
+msgid "Company"
+msgstr "Firma"
+
+#: templates/data_room/_company_overview.html:9
+msgid "Role"
+msgstr "Rolle"
+
+#: templates/data_room/_company_overview.html:11
+msgid "GuV"
+msgstr "GuV"
+
+#: templates/data_room/_company_overview.html:13
+msgid "Docs"
+msgstr "Dokumentation"
+
+#: templates/data_room/_company_overview.html:14
+msgid "Info-Memo"
+msgstr "Info-Memo"
+
+#: templates/data_room/_company_overview.html:59
+msgid "Active"
+msgstr "Aktiv"
+
+#: templates/data_room/_company_overview.html:59
+msgid "Inactive"
+msgstr "Inaktiv"
+
+#: templates/data_room/_confirm_clients_oob_update.html:9
+msgid "Client confirmation completed successfully."
+msgstr "Kundenzuordnung erfolgreich abgeschlossen."
+
+#: templates/data_room/_confirm_clients_oob_update.html:11
+#: templates/data_room/_hx_edit_client_oob_update.html:11
+msgid "Linked to:"
+msgstr "Verknüpft mit:"
+
+#: templates/data_room/_hx_confirm_clients.html:9
+msgid "Confirm Clients"
+msgstr "Kunden bestätigen"
+
+#: templates/data_room/_hx_confirm_clients.html:18
+msgid "No companies were identified in this document."
+msgstr "In diesem Dokument wurden keine Unternehmen identifiziert."
+
+#: templates/data_room/_hx_confirm_clients.html:29
+msgid "Extracted Company"
+msgstr "Extrahiertes Unternehmen"
+
+#: templates/data_room/_hx_confirm_clients.html:30
+msgid "HRB"
+msgstr "HRB"
+
+#: templates/data_room/_hx_confirm_clients.html:31
+msgid "Legal Form"
+msgstr "Rechtsform"
+
+#: templates/data_room/_hx_confirm_clients.html:32
+msgid "Match"
+msgstr "Spiel"
+
+#: templates/data_room/_hx_confirm_clients.html:33
+msgid "Action"
+msgstr "Aktion"
+
+#: templates/data_room/_hx_confirm_clients.html:53
+msgid "Name Match"
+msgstr "Namensübereinstimmung"
+
+#: templates/data_room/_hx_confirm_clients.html:59
+msgid "Suggested"
+msgstr "Vorgeschlagen"
+
+#: templates/data_room/_hx_confirm_clients.html:62
+msgid "HRB found"
+msgstr "HRB gefunden"
+
+#: templates/data_room/_hx_confirm_clients.html:63
+msgid "Create new"
+msgstr "Neu anlegen"
+
+#: templates/data_room/_hx_confirm_clients.html:65
+msgid "No match"
+msgstr "keine Übereinstimmung gefunden"
+
+#: templates/data_room/_hx_confirm_clients.html:82
+msgid "Select existing client:"
+msgstr "Bestehenden Kunden auswählen:"
+
+#: templates/data_room/_hx_confirm_clients.html:110
+msgid "Legal form"
+msgstr "Rechtsform"
+
+#: templates/data_room/_hx_confirm_clients.html:137
+#: templates/data_room/_hx_edit_client.html:53
+#: templates/data_room/_hx_edit_client_client_doc.html:126
+#: templates/data_room/_hx_upload_protected_document.html:78
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: templates/data_room/_hx_confirm_clients.html:141
+msgid "Confirm"
+msgstr "Bestätigen"
+
+#: templates/data_room/_hx_edit_client.html:9
+#: templates/data_room/_hx_edit_client_client_doc.html:9
+msgid "Edit linked client"
+msgstr "Verknüpften Kunden bearbeiten"
+
+#: templates/data_room/_hx_edit_client.html:18
+#: templates/data_room/_hx_edit_client_client_doc.html:18
+msgid "Document"
+msgstr "Dokument"
+
+#: templates/data_room/_hx_edit_client.html:24
+#: templates/data_room/_hx_edit_client_client_doc.html:24
+msgid "Currently linked to"
+msgstr "Aktuell verknüpft mit"
+
+#: templates/data_room/_hx_edit_client.html:29
+#: templates/data_room/_hx_edit_client_client_doc.html:29
+msgid "No client currently linked"
+msgstr "Derzeit ist kein Client verbunden"
+
+#: templates/data_room/_hx_edit_client.html:40
+#: templates/data_room/_hx_edit_client_client_doc.html:78
+msgid "Select client"
+msgstr "Kunden auswählen"
+
+#: templates/data_room/_hx_edit_client.html:44
+#: templates/data_room/_hx_edit_client_client_doc.html:82
+msgid "Select a client or leave empty to unlink."
+msgstr ""
+"Wählen Sie einen Kunden aus oder lassen Sie das Feld leer, um die "
+"Verknüpfung aufzuheben."
+
+#: templates/data_room/_hx_edit_client.html:57
+#: templates/data_room/_hx_edit_client_client_doc.html:130
+msgid "Save"
+msgstr "Speichern"
+
+#: templates/data_room/_hx_edit_client_client_doc.html:90
+msgid "Company Name"
+msgstr "Firmenname"
+
+#: templates/data_room/_hx_edit_client_client_doc.html:99
+msgid "Register Number (HRB)"
+msgstr "Registernummer (HRB)"
+
+#: templates/data_room/_hx_edit_client_client_doc.html:106
+msgid "Pre-filled from document extraction"
+msgstr "Aus Dokumenten extrahierte Daten"
+
+#: templates/data_room/_hx_edit_client_client_doc.html:115
+msgid "Leave empty to create as top-level holding."
+msgstr "Lassen Sie das Feld leer, um eine oberste Ebene zu erstellen."
+
+#: templates/data_room/_hx_edit_client_oob_update.html:9
+msgid "Client updated successfully."
+msgstr "Der Client wurde erfolgreich aktualisiert."
+
+#: templates/data_room/_hx_edit_client_oob_update.html:13
+msgid "Client unlinked."
+msgstr "Kundenverknüpfung aufgehoben."
+
+#: templates/data_room/_hx_trigger_extraction_oob_update.html:6
+msgid "Client extraction started for"
+msgstr "Kundenextraktion gestartet für"
+
+#: templates/data_room/_hx_trigger_extraction_oob_update.html:6
+msgid "documents"
+msgstr "Dokumente"
+
+#: templates/data_room/_hx_trigger_extraction_oob_update.html:7
+msgid "Please wait for processing to complete."
+msgstr "Bitte warten Sie, bis die Verarbeitung abgeschlossen ist."
+
+#: templates/data_room/_hx_upload_protected_document.html:9
+msgid "Upload Documents"
+msgstr "Dokumente hochladen"
+
+#: templates/data_room/_hx_upload_protected_document.html:27
+msgid "Some files were skipped:"
+msgstr "Einige Dateien wurden übersprungen:"
+
+#: templates/data_room/_hx_upload_protected_document.html:42
+msgid "Drag and drop files here"
+msgstr "Dateien hierher ziehen und ablegen"
+
+#: templates/data_room/_hx_upload_protected_document.html:43
+msgid "or"
+msgstr "oder"
+
+#: templates/data_room/_hx_upload_protected_document.html:45
+msgid "Browse files"
+msgstr "Dateien durchsuchen"
+
+#: templates/data_room/_hx_upload_protected_document.html:48
+msgid "Supported formats: PDF, DOCX, DOC, ODT, GIF, PNG, JPG, JPEG, WEBP"
+msgstr "Unterstützte Formate: PDF, DOCX, DOC, ODT, GIF, PNG, JPG, JPEG, WEBP"
+
+#: templates/data_room/_hx_upload_protected_document.html:56
+msgid "Selected files"
+msgstr "Ausgewählte Dateien"
+
+#: templates/data_room/_hx_upload_protected_document.html:65
+msgid "Uploading files"
+msgstr "Dateien hochladen"
+
+#: templates/data_room/_hx_upload_protected_document.html:81
+msgid "Upload"
+msgstr "Hochladen"
+
+#: templates/data_room/_hx_upload_protected_document.html:280
+msgid "Waiting"
+msgstr "Warten"
+
+#: templates/data_room/_hx_upload_protected_document.html:311
+#: templates/data_room/_show_protected_page.html:17
+msgid "Close"
+msgstr "Schließen"
+
+#: templates/data_room/_hx_upload_protected_document.html:323
+msgid "Uploading..."
+msgstr "Hochladen…"
+
+#: templates/data_room/_show_company_document_card.html:46
+#: templates/data_room/_show_protected_document.html:48
+msgid "Tokens"
+msgstr "Tokens"
+
+#: templates/data_room/_show_company_document_card.html:72
+#: templates/data_room/_show_company_document_table_row.html:51
+#: templates/data_room/_show_project_document_table_row.html:34
+#: templates/data_room/_show_protected_document.html:78
+#: templates/data_room/project_zip_progress.html:71
+msgid "Download"
+msgstr "Download"
+
+#: templates/data_room/_show_company_document_card.html:76
+#: templates/data_room/_show_company_document_table_row.html:55
+#: templates/data_room/_show_project_document_table_row.html:38
+#: templates/data_room/_show_protected_document.html:82
+msgid "Original"
+msgstr "Original"
+
+#: templates/data_room/_show_company_document_card.html:96
+#: templates/data_room/_show_company_document_table_row.html:71
+#: templates/data_room/_show_project_document_table_row.html:52
+#: templates/data_room/_show_protected_document.html:101
+msgid "Are you sure you want to delete this document?"
+msgstr "Sind Sie sicher, dass Sie dieses Dokument löschen möchten?"
+
+#: templates/data_room/_show_company_document_card.html:97
+#: templates/data_room/_show_company_document_table_row.html:72
+#: templates/data_room/_show_project_document_table_row.html:53
+#: templates/data_room/_show_protected_document.html:102
+msgid "Delete"
+msgstr "Löschen"
+
+#: templates/data_room/_show_company_document_card.html:106
+msgid "Processing..."
+msgstr "Wird verarbeitet..."
+
+#: templates/data_room/_show_company_document_card.html:113
+#: templates/data_room/_show_company_document_table_row.html:87
+msgid "Confirm client"
+msgstr "Kunden bestätigen"
+
+#: templates/data_room/_show_company_document_card.html:127
+#: templates/data_room/_show_company_document_table_row.html:95
+msgid "Edit client"
+msgstr "Kunden bearbeiten"
+
+#: templates/data_room/_show_company_document_table_row.html:44
+msgid "Awaiting"
+msgstr "Wartend"
+
+#: templates/data_room/_show_protected_document.html:66
+msgid "Chunks"
+msgstr "Chunks"
+
+#: templates/data_room/_show_protected_documents.html:9
+msgid "View toggle"
+msgstr "Ansicht wechseln"
+
+#: templates/data_room/_show_protected_documents.html:10
+msgid "Card view"
+msgstr "Berichtskarten"
+
+#: templates/data_room/_show_protected_documents.html:13
+msgid "Table view"
+msgstr "Tabellenansicht"
+
+#: templates/data_room/_show_protected_documents.html:22
+msgid "Corporate Structure"
+msgstr "Unternehmensstruktur"
+
+#: templates/data_room/_show_protected_documents.html:28
+#: templates/data_room/_show_protected_documents.html:37
+msgid "Company Documents"
+msgstr "Firmendokumente"
+
+#: templates/data_room/_show_protected_documents.html:32
+msgid "New company document"
+msgstr "Neues Firmendokument"
+
+#: templates/data_room/_show_protected_documents.html:53
+#: templates/data_room/_show_protected_documents.html:103
+msgid "Type"
+msgstr "Typ"
+
+#: templates/data_room/_show_protected_documents.html:56
+#: templates/data_room/_show_protected_documents.html:107
+msgid "Date"
+msgstr "Datum"
+
+#: templates/data_room/_show_protected_documents.html:57
+#: templates/data_room/_show_protected_documents.html:108
+msgid "Review"
+msgstr "Prüfung"
+
+#: templates/data_room/_show_protected_documents.html:58
+#: templates/data_room/_show_protected_documents.html:109
+msgid "Index"
+msgstr "Index"
+
+#: templates/data_room/_show_protected_documents.html:59
+msgid "Linked"
+msgstr "Verlinkt"
+
+#: templates/data_room/_show_protected_documents.html:60
+#: templates/data_room/_show_protected_documents.html:110
+msgid "Actions"
+msgstr "Aktionen"
+
+#: templates/data_room/_show_protected_documents.html:75
+msgid "Project documents"
+msgstr "Projektdokumente"
+
+#: templates/data_room/_show_protected_documents.html:79
+msgid "New project document"
+msgstr "Neues Projektdokument"
+
+#: templates/data_room/_show_protected_documents.html:106
+msgid "Uploaded by"
+msgstr "Hochgeladen von"
+
+#: templates/data_room/_zip_button.html:42
+msgid "View details"
+msgstr "Details anzeigen"
+
+#: templates/data_room/_zip_button.html:50
+msgid "Download latest ZIP"
+msgstr "Aktuelles ZIP herunterladen"
+
+#: templates/data_room/_zip_button.html:52
+#: templates/data_room/project_zip_progress.html:87
+msgid "Generate new ZIP"
+msgstr "Neue ZIP generieren"
+
+#: templates/data_room/_zip_button.html:60
+msgid "Download all documents"
+msgstr "Alle Dokumente herunterladen"
+
+#: templates/data_room/_zip_info.html:4
+msgid "info"
+msgstr "Info"
+
+#: templates/data_room/_zip_info.html:11
+msgid "Download info"
+msgstr "Download info"
+
+#: templates/data_room/_zip_info.html:16
+msgid "Only documents classified as reviewed are included  in the ZIP file."
+msgstr ""
+"Nur als geprüft eingestufte Dokumente werden in der ZIP-Datei "
+"berücksichtigt."
+
+#: templates/data_room/document_chunks.html:4
+#: templates/data_room/document_chunks.html:10
+msgid "Document Chunks"
+msgstr "Dokument-Chunks"
+
+#: templates/data_room/document_chunks.html:16
+msgid "Chunk"
+msgstr "Chunk"
+
+#: templates/data_room/document_chunks.html:24
+msgid "No chunks found for this document."
+msgstr "Keine Chunks für dieses Dokument gefunden."
+
+#: templates/data_room/includes/_action_buttons.html:11
+msgid "Mark as reviewed"
+msgstr "Als geprüft markieren"
+
+#: templates/data_room/includes/_action_buttons.html:21
+msgid "Disable"
+msgstr "Deaktivieren"
+
+#: templates/data_room/includes/_action_buttons.html:30
+msgid "Enable"
+msgstr "Aktivieren"
+
+#: templates/data_room/includes/_indexing_badge.html:4
+msgid "Indexed"
+msgstr "Indexiert"
+
+#: templates/data_room/project_zip_progress.html:5
+#: templates/data_room/project_zip_progress.html:15
+msgid "ZIP Generation Progress"
+msgstr "ZIP-Generation Fortschritt"
+
+#: templates/data_room/project_zip_progress.html:44
+msgid "Processing documents..."
+msgstr "Dokumente werden verarbeitet..."
+
+#: templates/data_room/project_zip_progress.html:49
+msgid "Step"
+msgstr "Schritt"
+
+#: templates/data_room/project_zip_progress.html:49
+msgid "of"
+msgstr "von"
+
+#: templates/data_room/project_zip_progress.html:56
+msgid "ZIP generation completed!"
+msgstr "ZIP-Generierung abgeschlossen!"
+
+#: templates/data_room/project_zip_progress.html:79
+msgid "No ZIP files available. Click the button below to generate one."
+msgstr ""
+"Keine ZIP-Dateien verfügbar. Klicken Sie auf die Schaltfläche unten, um eine"
+" zu erstellen."
+
+#: templates/data_room/project_zip_progress.html:96
+msgid "Back to Data Room"
+msgstr "Zurück zu Datenraum"
+
+#: templates/data_room/upload_protected_document.html:3
+msgid "Upload files"
+msgstr "Dateien hochladen"
+
+#: views/hx/upload_protected_document.py:62
+#: views/hx/upload_protected_document.py:134
+#, python-format
+msgid "%(filename)s: Already exists as '%(existing)s'"
+msgstr "%(filename)s: Existiert bereits als „%(existing)s“"
+
+#: views/hx/upload_protected_document.py:89
+#, python-format
+msgid "%(filename)s: Upload failed - %(error)s"
+msgstr "%(filename)s: Upload fehlgeschlagen – %(error)s"
+
+#: views/hx/upload_protected_document.py:123
+msgid "Expected exactly one file."
+msgstr "Es wurde genau eine Datei erwartet."
+
+#: views/hx/upload_protected_document.py:215
+msgid ""
+"No company is associated with this project yet. A client must access the "
+"project first."
+msgstr ""
+"Bislang ist noch kein Unternehmen mit diesem Projekt verknüpft. Ein Kunde "
+"muss zunächst auf das Projekt zugreifen."

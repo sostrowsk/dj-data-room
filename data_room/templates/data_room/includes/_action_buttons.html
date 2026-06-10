@@ -1,0 +1,33 @@
+{% load i18n %}
+{% load lucide_tags %}
+{# Action buttons for reviewed/disabled/enable #}
+{# Parameters: doc, target_id, url_reviewed, url_disabled, url_enable (optional), view_type #}
+{% if not doc.reviewed and not doc.disabled %}
+  <a class="btn btn-sm btn-outline-warning"
+     hx-post="{{ url_reviewed }}?view={{ view_type }}"
+     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+     hx-target="#{{ target_id }}"
+     hx-swap="outerHTML"
+     title="{% translate 'Mark as reviewed' %}">
+    {% icon "check" %}
+  </a>
+{% endif %}
+{% if not doc.disabled %}
+  <a class="btn btn-sm btn-outline-danger"
+     hx-post="{{ url_disabled }}?view={{ view_type }}"
+     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+     hx-target="#{{ target_id }}"
+     hx-swap="outerHTML"
+     title="{% translate 'Disable' %}">
+    {% icon "ban" %}
+  </a>
+{% elif url_enable %}
+  <a class="btn btn-sm btn-outline-success"
+     hx-post="{{ url_enable }}?view={{ view_type }}"
+     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+     hx-target="#{{ target_id }}"
+     hx-swap="outerHTML"
+     title="{% translate 'Enable' %}">
+    {% icon "check-circle" %}
+  </a>
+{% endif %}

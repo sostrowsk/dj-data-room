@@ -1,0 +1,6 @@
+{% load i18n %}
+{% if orgchart_svg %}
+<div id="orgchart" class="mt-3">
+  <div class="text-center">{{ orgchart_svg|safe }}</div>
+</div>
+{% endif %}

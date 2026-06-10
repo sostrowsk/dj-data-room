@@ -1,0 +1,16 @@
+{% extends "base_container.html" %}{% load static i18n %}
+
+{% block title %}{{ protected_document.name }}{% endblock %}
+
+{% block content %}
+  {% include "data_room/_show_protected_document.html" %}
+  <div id="DocumentModal"></div>
+{% endblock %}
+
+
+{% block scripts %}{{ block.super }}
+  <script src="{% static "js/htmx.min.js" %}"></script>
+  <script src="{% static "js/modal-htmx.js" %}"></script>
+  <script nonce="{{ csp_nonce }}">
+  </script>
+{% endblock scripts %}

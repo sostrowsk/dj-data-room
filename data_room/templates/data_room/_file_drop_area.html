@@ -1,0 +1,9 @@
+<div id="drop-area">
+  <form id="UploadProtectedDocumentForm" class="drop-area-form">{% csrf_token %}
+    <p>Upload multiple files with the file dialog or by dragging and dropping images onto the dashed region</p>
+    <input type="file" id="fileElements" multiple accept="image/*" onchange="handleFiles(this.files)">
+    <label class="button" for="fileElements">Select some files</label>
+  </form>
+  <progress id="progress-bar" max=100 value=0></progress>
+  <div id="gallery" /></div>
+</div>

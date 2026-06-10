@@ -1,0 +1,265 @@
+{% load i18n project_zip_tags %}
+{% load lucide_tags %}
+
+<style>
+#project-zip-button-container .btn-group {
+  vertical-align: middle;
+}
+#project-zip-button-container .text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 150px;
+  display: inline-block;
+  vertical-align: middle;
+}
+#project-zip-button-container .badge {
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+}
+#project-zip-button-container button[disabled] {
+  min-width: 200px;
+}
+</style>
+
+{% with active_zip_task=project|get_active_zip_task:request.user %}
+{% with latest_zip=project|get_latest_zip:request.user %}
+{% if active_zip_task %}
+  <div class="btn-group" role="group" id="project-zip-button-container" data-project-id="{{ project.id }}" data-task-id="{{ active_zip_task.id }}">
+    <button class="btn btn-outline-primary position-relative" disabled>
+      {% icon "spinner" class="me-1" %}
+      <span id="zip-progress-text" class="text-truncate">
+        {% if active_zip_task.step_description %}
+          {{ active_zip_task.step_description|truncatewords:2 }}
+        {% else %}
+          {% translate "Processing" %}
+        {% endif %}
+      </span>
+      <span id="zip-progress-percent" class="btn btn-sm btn-outline-primary text-white ms-2">
+        {{ active_zip_task.progress|default:0|floatformat:0 }}%
+      </span>
+    </button>
+    <a class="btn btn-outline-primary" href="{% url "data_room:project-zip-progress" project.pk %}" title="{% translate 'View details' %}">
+      {% icon "external-link-alt" %}
+    </a>
+  </div>
+{% elif latest_zip and latest_zip.status == "completed" %}
+  <div id="project-zip-button-container" data-project-id="{{ project.id }}">
+    <div class="btn-group" role="group">
+      <a class="btn btn-primary" href="{% url "data_room:download-project-zip" latest_zip.id %}">
+        {% icon "download" class="me-1" %}{% translate "Download latest ZIP" %}
+      </a>
+      <a class="btn btn-outline-success" href="{% url "data_room:start-project-zip" project.pk %}" title="{% translate 'Generate new ZIP' %}">
+        {% icon "redo" %}
+      </a>
+    </div>
+  </div>
+{% else %}
+  <div id="project-zip-button-container" data-project-id="{{ project.id }}">
+    <a class="btn btn-primary" href="{% url "data_room:start-project-zip" project.pk %}">
+      {% icon "file-zip" class="me-1" %}{% translate "Download all documents" %}
+    </a>
+  </div>
+  {%  if user.type == "broker" %}
+    {% include "data_room/_zip_info.html" %}
+  {% endif %}
+{% endif %}
+
+{% if active_zip_task %}
+<script>
+(function() {
+    const projectId = '{{ project.id }}';
+    const taskId = '{{ active_zip_task.id }}';
+    let refreshTimeout = null;
+    let lastRefreshTime = 0;
+    let observer = null;
+    let pollInterval = null;
+    
+    function refreshZipButton() {
+        // Throttle updates to prevent too many requests
+        const now = Date.now();
+        const timeSinceLastRefresh = now - lastRefreshTime;
+        
+        // Clear any pending refresh
+        if (refreshTimeout) {
+            clearTimeout(refreshTimeout);
+            refreshTimeout = null;
+        }
+        
+        // If we refreshed recently, delay this refresh
+        if (timeSinceLastRefresh < 500) {
+            refreshTimeout = setTimeout(refreshZipButton, 500 - timeSinceLastRefresh);
+            return;
+        }
+        
+        lastRefreshTime = now;
+        
+        // Use HTMX to refresh the button
+        const container = document.getElementById('project-zip-button-container');
+        if (container && typeof htmx !== 'undefined') {
+            htmx.ajax('GET', '{% url "data_room:hx-project-zip-button" project.pk %}', {
+                target: '#project-zip-button-container',
+                swap: 'outerHTML'
+            });
+        }
+    }
+    
+    function showNotification() {
+        // Show a notification that the ZIP is ready
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification('ZIP Download Ready', {
+                body: 'Your project ZIP file is ready for download.',
+                icon: '/static/favicon.ico'
+            });
+        }
+        
+        // Also show a toast or alert if the page has a notification system
+        if (typeof showToast === 'function') {
+            showToast('success', 'Your ZIP file is ready for download!');
+        }
+    }
+    
+    function watchProgressContainer() {
+        // Watch for changes in the progress container instead of creating our own WebSocket
+        const progressContainer = document.getElementById('progress-tracker-wrapper');
+        
+        if (!progressContainer) {
+            setTimeout(watchProgressContainer, 1000);
+            return;
+        }
+        
+        // For development environments with InMemoryChannelLayer, also poll for completion
+        let pollCount = 0;
+        const maxPolls = 600; // 10 minutes max
+        
+        function startPolling() {
+            if (pollInterval) return;
+            
+            pollInterval = setInterval(function() {
+                pollCount++;
+                
+                // Check if task is still in progress container
+                const progressContainer = document.getElementById('progress-tracker-wrapper');
+                const ourTask = progressContainer ? progressContainer.querySelector(`[data-task-id="${taskId}"]`) : null;
+                
+                // If task is no longer in progress container, fetch the updated button
+                if (!ourTask) {
+                    fetch(`{% url "data_room:hx-project-zip-button" project.pk %}`, {
+                        headers: {
+                            'HX-Request': 'true',
+                            'HX-Target': 'project-zip-button-container'
+                        }
+                    })
+                    .then(response => response.text())
+                    .then(html => {
+                        // Update the button with the new HTML
+                        const container = document.getElementById('project-zip-button-container');
+                        if (container) {
+                            container.outerHTML = html;
+                        }
+                        showNotification();
+                        
+                        // Stop polling
+                        if (pollInterval) {
+                            clearInterval(pollInterval);
+                            pollInterval = null;
+                        }
+                        
+                        // Disconnect observer
+                        if (observer) {
+                            observer.disconnect();
+                            observer = null;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error polling for ZIP status:', error);
+                    });
+                }
+                
+                // Stop polling after max attempts
+                if (pollCount >= maxPolls) {
+                    if (pollInterval) {
+                        clearInterval(pollInterval);
+                        pollInterval = null;
+                    }
+                }
+            }, 1000); // Poll every second
+        }
+        
+        // Create observer to watch for changes
+        observer = new MutationObserver(function(mutations) {
+            // Check if our task is in the progress container
+            const ourTask = progressContainer.querySelector(`[data-task-id="${taskId}"]`);
+            
+            if (ourTask) {
+                refreshZipButton();
+                // Start polling as fallback for development
+                startPolling();
+            } else if (progressContainer.textContent.includes('No active tasks') || 
+                      progressContainer.textContent.includes('Keine aktiven Aufgaben')) {
+                refreshZipButton();
+                showNotification();
+                setTimeout(() => {
+                    if (observer) {
+                        observer.disconnect();
+                        observer = null;
+                    }
+                    if (pollInterval) {
+                        clearInterval(pollInterval);
+                        pollInterval = null;
+                    }
+                }, 2000);
+            }
+        });
+        
+        // Start observing
+        observer.observe(progressContainer, {
+            childList: true,
+            subtree: true,
+            characterData: true
+        });
+        
+        // Start polling immediately for development environments
+        startPolling();
+    }
+    
+    function reloadZipButton() {
+        // This is called when task is complete
+        showNotification();
+        refreshZipButton();
+        
+        // Stop observing as task is complete
+        setTimeout(() => {
+            if (observer) {
+                observer.disconnect();
+                observer = null;
+            }
+        }, 1000);
+    }
+    
+    // Start watching immediately
+    watchProgressContainer();
+    
+    // Request notification permission if not already granted
+    if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+    }
+    
+    // Clean up on page unload
+    window.addEventListener('beforeunload', function() {
+        if (observer) {
+            observer.disconnect();
+        }
+        if (refreshTimeout) {
+            clearTimeout(refreshTimeout);
+        }
+        if (pollInterval) {
+            clearInterval(pollInterval);
+        }
+    });
+})();
+</script>
+{% endif %}
+
+{% endwith %}
+{% endwith %}

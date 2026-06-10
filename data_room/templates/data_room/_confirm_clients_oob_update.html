@@ -1,0 +1,14 @@
+{% load i18n %}
+{% load lucide_tags %}
+{# Close modal #}
+<div id="DocumentModal"></div>
+
+{# Success message (can be displayed via toast or alert) #}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  {% icon "check-circle" class="me-2" %}
+  {% translate "Client confirmation completed successfully." %}
+  {% if document.client %}
+    {% translate "Linked to:" %} <strong>{{ document.client.company }}</strong>
+  {% endif %}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
