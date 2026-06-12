@@ -57,19 +57,24 @@ FORBIDDEN_HOST_TOP_LEVELS = {
 def _forbidden_host_top_levels() -> set:
     """Static core list + all installed host apps (apps whose code lives
     inside the host repo, i.e. under ``settings.BASE_DIR``), excluding only
-    data_room itself. The peer packages need no name-based exclusion — they
-    are installed from site-packages, so they are never under BASE_DIR (and
-    a host app smuggled into ALLOWED_PEERS still gets flagged)."""
+    data_room itself. Apps installed in the virtualenv (``sys.prefix``) are
+    never host apps, even when the venv lives inside BASE_DIR (uv-style
+    ``.venv/`` in the project root) — without this exclusion every
+    site-packages app would be misclassified as a host app."""
     from django.apps import apps as django_apps
     from django.conf import settings
 
     base_dir = Path(settings.BASE_DIR).resolve()
+    venv_dir = Path(sys.prefix).resolve()
     discovered = set()
     for app_config in django_apps.get_app_configs():
         top_level = app_config.name.split(".")[0]
         if top_level == "data_room":
             continue
-        if base_dir in Path(app_config.path).resolve().parents:
+        app_path = Path(app_config.path).resolve()
+        if venv_dir in app_path.parents:
+            continue
+        if base_dir in app_path.parents:
             discovered.add(top_level)
     return FORBIDDEN_HOST_TOP_LEVELS | discovered
 
